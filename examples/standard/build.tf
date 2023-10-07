@@ -25,6 +25,13 @@ module "network" {
   }
 }
 
+resource "azurerm_user_assigned_identity" "uid" {
+  name                = "uid-${var.short}-${var.loc}-${var.env}-01"
+  resource_group_name = module.rg.rg_name
+  location            = module.rg.rg_location
+  tags                = module.rg.rg_tags
+}
+
 module "sa" {
   source = "../../"
   storage_accounts = [
@@ -33,7 +40,8 @@ module "sa" {
       rg_name       = module.rg.rg_name
       location      = module.rg.rg_location
       tags          = module.rg.rg_tags
-      identity_type = "SystemAssigned"
+      identity_type = "SystemAssigned, UserAssigned"
+      identity_ids  = [azurerm_user_assigned_identity.uid.id]
       network_rules = {
         bypass                     = ["AzureServices"]
         default_action             = "Deny"

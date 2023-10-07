@@ -1,6 +1,6 @@
-output "storage_account_ids" {
-  description = "The IDs of the storage accounts."
-  value       = { for sa in azurerm_storage_account.sa : sa.name => sa.id }
+output "primary_access_keys" {
+  description = "The primary access keys of the storage accounts."
+  value       = { for sa in azurerm_storage_account.sa : sa.name => sa.primary_access_key }
 }
 
 output "primary_blob_connection_strings" {
@@ -8,24 +8,9 @@ output "primary_blob_connection_strings" {
   value       = { for sa in azurerm_storage_account.sa : sa.name => sa.primary_blob_connection_string }
 }
 
-output "primary_access_keys" {
-  description = "The primary access keys of the storage accounts."
-  value       = { for sa in azurerm_storage_account.sa : sa.name => sa.primary_access_key }
-}
-
-output "secondary_access_keys" {
-  description = "The secondary access keys of the storage accounts."
-  value       = { for sa in azurerm_storage_account.sa : sa.name => sa.secondary_access_key }
-}
-
 output "primary_blob_endpoints" {
   description = "The primary blob endpoints of the storage accounts."
   value       = { for sa in azurerm_storage_account.sa : sa.name => sa.primary_blob_endpoint }
-}
-
-output "primary_queue_endpoints" {
-  description = "The primary queue endpoints of the storage accounts."
-  value       = { for sa in azurerm_storage_account.sa : sa.name => sa.primary_queue_endpoint }
 }
 
 output "primary_file_endpoints" {
@@ -33,29 +18,14 @@ output "primary_file_endpoints" {
   value       = { for sa in azurerm_storage_account.sa : sa.name => sa.primary_file_endpoint }
 }
 
+output "primary_queue_endpoints" {
+  description = "The primary queue endpoints of the storage accounts."
+  value       = { for sa in azurerm_storage_account.sa : sa.name => sa.primary_queue_endpoint }
+}
+
 output "primary_table_endpoints" {
   description = "The primary table endpoints of the storage accounts."
   value       = { for sa in azurerm_storage_account.sa : sa.name => sa.primary_table_endpoint }
-}
-
-output "secondary_table_endpoints" {
-  description = "The secondary table endpoints of the storage accounts."
-  value       = { for sa in azurerm_storage_account.sa : sa.name => sa.secondary_table_endpoint }
-}
-
-output "storage_account_names" {
-  description = "The names of the storage accounts."
-  value       = { for sa in azurerm_storage_account.sa : sa.name => sa.name }
-}
-
-output "storage_account_locations" {
-  description = "The locations of the storage accounts."
-  value       = { for sa in azurerm_storage_account.sa : sa.name => sa.location }
-}
-
-output "storage_account_resource_groups" {
-  description = "The resource group names of the storage accounts."
-  value       = { for sa in azurerm_storage_account.sa : sa.name => sa.resource_group_name }
 }
 
 output "registry_identities" {
@@ -67,4 +37,34 @@ output "registry_identities" {
       tenant_id    = try(value.identity.0.tenant_id, null)
     }
   }
+}
+
+output "secondary_access_keys" {
+  description = "The secondary access keys of the storage accounts."
+  value       = { for sa in azurerm_storage_account.sa : sa.name => sa.secondary_access_key }
+}
+
+output "secondary_table_endpoints" {
+  description = "The secondary table endpoints of the storage accounts."
+  value       = { for sa in azurerm_storage_account.sa : sa.name => sa.secondary_table_endpoint }
+}
+
+output "storage_account_ids" {
+  description = "The IDs of the storage accounts."
+  value       = { for sa in azurerm_storage_account.sa : sa.name => sa.id }
+}
+
+output "storage_account_locations" {
+  description = "The locations of the storage accounts."
+  value       = { for sa in azurerm_storage_account.sa : sa.name => sa.location }
+}
+
+output "storage_account_names" {
+  description = "The names of the storage accounts."
+  value       = { for sa in azurerm_storage_account.sa : sa.name => sa.name }
+}
+
+output "storage_account_resource_groups" {
+  description = "The resource group names of the storage accounts."
+  value       = { for sa in azurerm_storage_account.sa : sa.name => sa.resource_group_name }
 }

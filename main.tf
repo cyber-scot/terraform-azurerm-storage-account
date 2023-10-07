@@ -1,23 +1,23 @@
 resource "azurerm_storage_account" "sa" {
-  for_each                        = { for sa in var.storage_accounts : sa.name => sa }
-  name                            = each.value.name
-  resource_group_name             = each.value.rg_name
-  location                        = each.value.location
-  account_kind                    = each.value.account_kind
-  account_tier                    = each.value.account_tier
-  account_replication_type        = upper(each.value.account_replication_type)
-  access_tier                     = title(each.value.access_tier)
-  enable_https_traffic_only       = each.value.enable_https_traffic_only
-  min_tls_version                 = each.value.min_tls_version
-  is_hns_enabled                  = each.value.is_hns_enabled
-  cross_tenant_replication_enabled = each.value.cross_tenant_replication_enabled
-  edge_zone                       = each.value.edge_zone
-  default_to_oauth_authentication = each.value.default_to_oauth_authentication
-  nfsv3_enabled                   = each.value.nfsv3_enabled
-  large_file_share_enabled        = each.value.large_file_share_enabled
-  allow_nested_items_to_be_public = each.value.allow_nested_items_to_be_public
-  shared_access_key_enabled       = each.value.shared_access_keys_enabled
-  tags                            = each.value.tags
+  for_each                          = { for sa in var.storage_accounts : sa.name => sa }
+  name                              = each.value.name
+  resource_group_name               = each.value.rg_name
+  location                          = each.value.location
+  account_kind                      = each.value.account_kind
+  account_tier                      = each.value.account_tier
+  account_replication_type          = upper(each.value.account_replication_type)
+  access_tier                       = title(each.value.access_tier)
+  enable_https_traffic_only         = each.value.enable_https_traffic_only
+  min_tls_version                   = each.value.min_tls_version
+  is_hns_enabled                    = each.value.is_hns_enabled
+  cross_tenant_replication_enabled  = each.value.cross_tenant_replication_enabled
+  edge_zone                         = each.value.edge_zone
+  default_to_oauth_authentication   = each.value.default_to_oauth_authentication
+  nfsv3_enabled                     = each.value.nfsv3_enabled
+  large_file_share_enabled          = each.value.large_file_share_enabled
+  allow_nested_items_to_be_public   = each.value.allow_nested_items_to_be_public
+  shared_access_key_enabled         = each.value.shared_access_keys_enabled
+  tags                              = each.value.tags
   queue_encryption_key_type         = each.value.queue_encryption_key_type
   table_encryption_key_type         = each.value.table_encryption_key_type
   infrastructure_encryption_enabled = each.value.infrastructure_encryption_enabled
@@ -32,7 +32,7 @@ resource "azurerm_storage_account" "sa" {
   }
 
   dynamic "identity" {
-    for_each = try(length(each.value.identity_ids), 0) > 0 || each.value.identity_type == "SystemAssigned, UserAssigned" ? [each.value.identity_type] : []
+    for_each = each.value.identity_type == "SystemAssigned, UserAssigned" ? [each.value.identity_type] : []
     content {
       type         = each.value.identity_type
       identity_ids = try(each.value.identity_ids, [])
@@ -41,7 +41,7 @@ resource "azurerm_storage_account" "sa" {
 
 
   dynamic "identity" {
-    for_each = try(length(each.value.identity_ids), 0) > 0 || each.value.identity_type == "SystemAssigned, UserAssigned" ? [each.value.identity_type] : []
+    for_each = each.value.identity_type == "UserAssigned" ? [each.value.identity_type] : []
     content {
       type         = each.value.identity_type
       identity_ids = length(try(each.value.identity_ids, [])) > 0 ? each.value.identity_ids : []
