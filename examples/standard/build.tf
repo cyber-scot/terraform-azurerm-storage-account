@@ -33,15 +33,17 @@ resource "azurerm_user_assigned_identity" "uid" {
 }
 
 module "sa" {
-  source = "../../"
+  source = "cyber-scot/storage-account/azurerm"
   storage_accounts = [
     {
-      name          = "sa${var.short}${var.loc}${var.env}01"
-      rg_name       = module.rg.rg_name
-      location      = module.rg.rg_location
-      tags          = module.rg.rg_tags
+      name     = "sa${var.short}${var.loc}${var.env}01"
+      rg_name  = module.rg.rg_name
+      location = module.rg.rg_location
+      tags     = module.rg.rg_tags
+
       identity_type = "SystemAssigned, UserAssigned"
       identity_ids  = [azurerm_user_assigned_identity.uid.id]
+
       network_rules = {
         bypass                     = ["AzureServices"]
         default_action             = "Deny"

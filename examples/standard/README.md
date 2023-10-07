@@ -27,19 +27,29 @@ module "network" {
   }
 }
 
+resource "azurerm_user_assigned_identity" "uid" {
+  name                = "uid-${var.short}-${var.loc}-${var.env}-01"
+  resource_group_name = module.rg.rg_name
+  location            = module.rg.rg_location
+  tags                = module.rg.rg_tags
+}
+
 module "sa" {
-  source = "../../"
+  source = "cyber-scot/storage-account/azurerm"
   storage_accounts = [
     {
-      name = "sa${var.short}${var.loc}${var.env}01"
-      rg_name  = module.rg.rg_name
-      location = module.rg.rg_location
-      tags     = module.rg.rg_tags
-      identity_type = "SystemAssigned"
+      name          = "sa${var.short}${var.loc}${var.env}01"
+      rg_name       = module.rg.rg_name
+      location      = module.rg.rg_location
+      tags          = module.rg.rg_tags
+
+      identity_type = "SystemAssigned, UserAssigned"
+      identity_ids  = [azurerm_user_assigned_identity.uid.id]
+
       network_rules = {
-        bypass = ["AzureServices"]
-        default_action = "Deny"
-        ip_rules = [chomp(data.http.client_ip.response_body)]
+        bypass                     = ["AzureServices"]
+        default_action             = "Deny"
+        ip_rules                   = [chomp(data.http.client_ip.response_body)]
         virtual_network_subnet_ids = [module.network.subnets_ids["sn1-${module.network.vnet_name}"]]
       }
     }
@@ -47,7 +57,7 @@ module "sa" {
 }
 
 output "all" {
-  value = module.sa.*
+  value     = module.sa.*
   sensitive = true
 }
 ```
@@ -69,12 +79,13 @@ No requirements.
 |------|--------|---------|
 | <a name="module_network"></a> [network](#module\_network) | cyber-scot/network/azurerm | n/a |
 | <a name="module_rg"></a> [rg](#module\_rg) | cyber-scot/rg/azurerm | n/a |
-| <a name="module_sa"></a> [sa](#module\_sa) | ../../ | n/a |
+| <a name="module_sa"></a> [sa](#module\_sa) | cyber-scot/storage-account/azurerm | n/a |
 
 ## Resources
 
 | Name | Type |
 |------|------|
+| [azurerm_user_assigned_identity.uid](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/user_assigned_identity) | resource |
 | [azurerm_client_config.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) | data source |
 | [external_external.detect_os](https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external) | data source |
 | [external_external.generate_timestamp](https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external) | data source |
