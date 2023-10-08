@@ -251,3 +251,40 @@ resource "azurerm_storage_account" "sa" {
     }
   }
 }
+
+data "azurerm_storage_account_sas" "sas" {
+  for_each = { for sa in var.storage_accounts : sa.name => sa if sa.shared_access_keys_enabled == true && sa.generate_sas_token == true}
+
+  connection_string = azurerm_storage_account.sa[each.key].primary_connection_string
+  https_only        = each.value.sas_config.https_only
+  signed_version    = each.value.sas_config.signed_version
+
+  resource_types {
+    service   = each.value.sas_config.service
+    container = each.value.sas_config.container
+    object    = each.value.sas_config.object
+  }
+
+  services {
+    blob  = each.value.sas_config.blob
+    queue = each.value.sas_config.queue
+    table = each.value.sas_config.table
+    file  = each.value.sas_config.file
+  }
+
+  start  = each.value.sas_config.start
+  expiry = each.value.sas_config.expiry
+
+  permissions {
+    read    = each.value.sas_config.read
+    write   = each.value.sas_config.write
+    delete  = each.value.sas_config.delete
+    list    = each.value.sas_config.list
+    add     = each.value.sas_config.add
+    create  = each.value.sas_config.create
+    update  = each.value.sas_config.update
+    process = each.value.sas_config.process
+    tag     = each.value.sas_config.tag
+    filter  = each.value.sas_config.filter
+  }
+}

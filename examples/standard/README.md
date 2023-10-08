@@ -38,10 +38,10 @@ module "sa" {
   source = "cyber-scot/storage-account/azurerm"
   storage_accounts = [
     {
-      name          = "sa${var.short}${var.loc}${var.env}01"
-      rg_name       = module.rg.rg_name
-      location      = module.rg.rg_location
-      tags          = module.rg.rg_tags
+      name     = "sa${var.short}${var.loc}${var.env}01"
+      rg_name  = module.rg.rg_name
+      location = module.rg.rg_location
+      tags     = module.rg.rg_tags
 
       identity_type = "SystemAssigned, UserAssigned"
       identity_ids  = [azurerm_user_assigned_identity.uid.id]
@@ -52,12 +52,45 @@ module "sa" {
         ip_rules                   = [chomp(data.http.client_ip.response_body)]
         virtual_network_subnet_ids = [module.network.subnets_ids["sn1-${module.network.vnet_name}"]]
       }
-    }
+    },
+    {
+      name     = "sa${var.short}${var.loc}${var.env}02"
+      rg_name  = module.rg.rg_name
+      location = module.rg.rg_location
+      tags     = module.rg.rg_tags
+
+      shared_access_keys_enabled        = true
+      generate_sas_token                = true
+      sas_config = {
+        https_only        = true
+        signed_version    = "2019-12-12"
+        service           = true
+        container         = true
+        object            = true
+        blob              = true
+        queue             = true
+        table             = true
+        file              = true
+        start             = "2023-10-01T00:00:00Z"
+        expiry            = "2023-12-31T23:59:59Z"
+        read              = true
+        write             = true
+        delete            = true
+        list              = true
+        add               = true
+        create            = true
+        update            = true
+        process           = true
+        tag               = true
+        filter            = true
+      }
+    },
   ]
 }
 
-output "all" {
-  value     = module.sa.*
+
+output "sas_token" {
+  value = module.sa.sas_tokens["sa${var.short}${var.loc}${var.env}02"]
   sensitive = true
 }
 ```
@@ -105,4 +138,4 @@ No requirements.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_all"></a> [all](#output\_all) | n/a |
+| <a name="output_sas_token"></a> [sas\_token](#output\_sas\_token) | n/a |
