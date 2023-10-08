@@ -32,6 +32,11 @@ resource "azurerm_user_assigned_identity" "uid" {
   tags                = module.rg.rg_tags
 }
 
+locals {
+  now                 = timestamp()
+  seven_days_from_now = timeadd(timestamp(), "168h")
+}
+
 module "sa" {
   source = "cyber-scot/storage-account/azurerm"
   storage_accounts = [
@@ -69,8 +74,8 @@ module "sa" {
         queue          = true
         table          = true
         file           = true
-        start          = "2023-10-01T00:00:00Z"
-        expiry         = "2023-12-31T23:59:59Z"
+        start          = local.now
+        expiry         = local.seven_days_from_now
         read           = true
         write          = true
         delete         = true

@@ -34,6 +34,11 @@ resource "azurerm_user_assigned_identity" "uid" {
   tags                = module.rg.rg_tags
 }
 
+locals {
+  now = timestamp()
+  seven_days_from_now = timeadd(timestamp(), "168h")
+}
+
 module "sa" {
   source = "cyber-scot/storage-account/azurerm"
   storage_accounts = [
@@ -59,30 +64,30 @@ module "sa" {
       location = module.rg.rg_location
       tags     = module.rg.rg_tags
 
-      shared_access_keys_enabled        = true
-      generate_sas_token                = true
+      shared_access_keys_enabled = true
+      generate_sas_token         = true
       sas_config = {
-        https_only        = true
-        signed_version    = "2019-12-12"
-        service           = true
-        container         = true
-        object            = true
-        blob              = true
-        queue             = true
-        table             = true
-        file              = true
-        start             = "2023-10-01T00:00:00Z"
-        expiry            = "2023-12-31T23:59:59Z"
-        read              = true
-        write             = true
-        delete            = true
-        list              = true
-        add               = true
-        create            = true
-        update            = true
-        process           = true
-        tag               = true
-        filter            = true
+        https_only     = true
+        signed_version = "2019-12-12"
+        service        = true
+        container      = true
+        object         = true
+        blob           = true
+        queue          = true
+        table          = true
+        file           = true
+        start          = local.now
+        expiry         = local.seven_days_from_now
+        read           = true
+        write          = true
+        delete         = true
+        list           = true
+        add            = true
+        create         = true
+        update         = true
+        process        = true
+        tag            = true
+        filter         = true
       }
     },
   ]
@@ -90,7 +95,7 @@ module "sa" {
 
 
 output "sas_token" {
-  value = module.sa.sas_tokens["sa${var.short}${var.loc}${var.env}02"]
+  value     = module.sa.sas_tokens["sa${var.short}${var.loc}${var.env}02"]
   sensitive = true
 }
 ```
