@@ -253,7 +253,7 @@ resource "azurerm_storage_account" "sa" {
 }
 
 data "azurerm_storage_account_sas" "sas" {
-  for_each = { for sa in var.storage_accounts : sa.name => sa if sa.shared_access_keys_enabled == true && sa.generate_sas_token == true}
+  for_each = { for sa in var.storage_accounts : sa.name => sa if sa.shared_access_keys_enabled == true && sa.generate_sas_token == true }
 
   connection_string = azurerm_storage_account.sa[each.key].primary_connection_string
   https_only        = each.value.sas_config.https_only

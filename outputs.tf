@@ -13,14 +13,6 @@ output "primary_blob_endpoints" {
   value       = { for sa in azurerm_storage_account.sa : sa.name => sa.primary_blob_endpoint }
 }
 
-output "sas_tokens" {
-  value = {
-    for k, sas in data.azurerm_storage_account_sas.sas : k => sas.sas
-  }
-  description = "The SAS tokens for the storage accounts."
-  sensitive   = true
-}
-
 output "primary_file_endpoints" {
   description = "The primary file endpoints of the storage accounts."
   value       = { for sa in azurerm_storage_account.sa : sa.name => sa.primary_file_endpoint }
@@ -45,6 +37,14 @@ output "registry_identities" {
       tenant_id    = try(value.identity.0.tenant_id, null)
     }
   }
+}
+
+output "sas_tokens" {
+  value = {
+    for k, sas in data.azurerm_storage_account_sas.sas : k => sas.sas
+  }
+  description = "The SAS tokens for the storage accounts."
+  sensitive   = true
 }
 
 output "secondary_access_keys" {
