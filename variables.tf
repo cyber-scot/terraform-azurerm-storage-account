@@ -36,8 +36,8 @@ variable "storage_accounts" {
     identity_ids  = optional(list(string))
     network_rules = optional(object({
       bypass                     = optional(list(string))
-      default_action             = string
-      ip_rules                   = list(string)
+      default_action             = optional(string)
+      ip_rules                   = optional(list(string))
       virtual_network_subnet_ids = optional(list(string))
       private_link_access = optional(list(object({
         endpoint_resource_id = string
