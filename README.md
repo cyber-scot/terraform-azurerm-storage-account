@@ -328,10 +328,10 @@ No modules.
 | <a name="output_primary_file_endpoints"></a> [primary\_file\_endpoints](#output\_primary\_file\_endpoints) | The primary file endpoints of the storage accounts. |
 | <a name="output_primary_queue_endpoints"></a> [primary\_queue\_endpoints](#output\_primary\_queue\_endpoints) | The primary queue endpoints of the storage accounts. |
 | <a name="output_primary_table_endpoints"></a> [primary\_table\_endpoints](#output\_primary\_table\_endpoints) | The primary table endpoints of the storage accounts. |
-| <a name="output_registry_identities"></a> [registry\_identities](#output\_registry\_identities) | The identities of the Azure Container Registries. |
 | <a name="output_sas_tokens"></a> [sas\_tokens](#output\_sas\_tokens) | The SAS tokens for the storage accounts. |
 | <a name="output_secondary_access_keys"></a> [secondary\_access\_keys](#output\_secondary\_access\_keys) | The secondary access keys of the storage accounts. |
 | <a name="output_secondary_table_endpoints"></a> [secondary\_table\_endpoints](#output\_secondary\_table\_endpoints) | The secondary table endpoints of the storage accounts. |
+| <a name="output_storage_account_identities"></a> [storage\_account\_identities](#output\_storage\_account\_identities) | The identities of the Storage Accounts. |
 | <a name="output_storage_account_ids"></a> [storage\_account\_ids](#output\_storage\_account\_ids) | The IDs of the storage accounts. |
 | <a name="output_storage_account_locations"></a> [storage\_account\_locations](#output\_storage\_account\_locations) | The locations of the storage accounts. |
 | <a name="output_storage_account_names"></a> [storage\_account\_names](#output\_storage\_account\_names) | The names of the storage accounts. |

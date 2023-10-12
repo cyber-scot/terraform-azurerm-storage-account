@@ -28,17 +28,6 @@ output "primary_table_endpoints" {
   value       = { for sa in azurerm_storage_account.sa : sa.name => sa.primary_table_endpoint }
 }
 
-output "registry_identities" {
-  description = "The identities of the Azure Container Registries."
-  value = {
-    for key, value in azurerm_storage_account.sa : key => {
-      type         = try(value.identity.0.type, null)
-      principal_id = try(value.identity.0.principal_id, null)
-      tenant_id    = try(value.identity.0.tenant_id, null)
-    }
-  }
-}
-
 output "sas_tokens" {
   value = {
     for k, sas in data.azurerm_storage_account_sas.sas : k => sas.sas
@@ -55,6 +44,17 @@ output "secondary_access_keys" {
 output "secondary_table_endpoints" {
   description = "The secondary table endpoints of the storage accounts."
   value       = { for sa in azurerm_storage_account.sa : sa.name => sa.secondary_table_endpoint }
+}
+
+output "storage_account_identities" {
+  description = "The identities of the Storage Accounts."
+  value = {
+    for key, value in azurerm_storage_account.sa : key => {
+      type         = try(value.identity.0.type, null)
+      principal_id = try(value.identity.0.principal_id, null)
+      tenant_id    = try(value.identity.0.tenant_id, null)
+    }
+  }
 }
 
 output "storage_account_ids" {
